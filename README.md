@@ -47,21 +47,21 @@ To design and implement appropriate data charts for analyzing and comparing acad
 
 6.Visualizations Implemented:
 
-   Bar Chart
+        Bar Chart
    
-   Displays subject-wise average marks
+        Displays subject-wise average marks
    
-   Helps identify subjects with low performance
+        Helps identify subjects with low performance
    
-   Line Chart
+        Line Chart
    
-   Shows performance trend across tests
+        Shows performance trend across tests
    
-   Useful for trend analysis
+         Useful for trend analysis
    
-   Pie Chart
+         Pie Chart
    
-   Represents grade distribution
+         Represents grade distribution
    
    Gives an overview of student performance levels
 
