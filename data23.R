@@ -1,43 +1,48 @@
+install.packages("ggplot2")
+install.packages("dplyr")
 
 library(ggplot2)
 library(dplyr)
-library(lubridate)
 
-ecommerce_data <- read.csv("ecommerce_transactions.csv")
-ecommerce_data <- na.omit(ecommerce_data)
+student_performance <- read.csv("student_performance.csv")
 
-cat("Name: K.B. MUHIL\n")
-cat("Roll No: 23BAD070\n")
+student_performance <- na.omit(student_performance)
 
-# --------------------------
-# Histogram
-# --------------------------
-ggplot(ecommerce_data, aes(x = Transaction_Amount)) +
-  geom_histogram(fill = "skyblue", color = "black", bins = 20) +
-  ggtitle("Histogram of Transaction Amounts\nK.B. MUHIL | 23BAD070") +
+student_performance$Total_Marks <- student_performance$Internal_Test1 +
+                                   student_performance$Internal_Test2 +
+                                   student_performance$Assignment_Marks
+
+subject_avg <- student_performance %>%
+  group_by(Subject) %>%
+  summarise(Average_Marks = mean(Total_Marks))
+
+ggplot(subject_avg, aes(x = Subject, y = Average_Marks, fill = Subject)) +
+  geom_bar(stat = "identity") +
+  ggtitle("Subject-wise Average Marks\nK.B. MUHIL | 23BAD070") +
+  xlab("Subjects") +
+  ylab("Average Marks") +
   theme_minimal()
 
-# --------------------------
-# Boxplot
-# --------------------------
-ggplot(ecommerce_data, aes(y = Transaction_Amount)) +
-  geom_boxplot(fill = "orange") +
-  ggtitle("Outlier Detection using Boxplot\nK.B. MUHIL | 23BAD070") +
+test_avg <- data.frame(
+  Test = c("Internal Test 1", "Internal Test 2", "Assignment"),
+  Marks = c(mean(student_performance$Internal_Test1),
+            mean(student_performance$Internal_Test2),
+            mean(student_performance$Assignment_Marks))
+)
+
+ggplot(test_avg, aes(x = Test, y = Marks, group = 1)) +
+  geom_line(color = "blue", size = 1.2) +
+  geom_point(size = 3) +
+  ggtitle("Performance Trend Across Tests\nK.B. MUHIL | 23BAD070") +
+  xlab("Tests") +
+  ylab("Average Marks") +
   theme_minimal()
 
-# --------------------------
-# Heatmap of Monthly Sales
-# --------------------------
-ecommerce_data$Month <- floor_date(as.Date(ecommerce_data$Transaction_Date), "month")
+grade_data <- student_performance %>%
+  count(Final_Grade)
 
-monthly_sales <- ecommerce_data %>%
-  group_by(Month) %>%
-  summarise(Total_Sales = sum(Transaction_Amount))
-
-ggplot(monthly_sales, aes(x = Month, y = "Sales", fill = Total_Sales)) +
-  geom_tile() +
-  scale_fill_gradient(low = "yellow", high = "red") +
-  ggtitle("Monthly Sales Heatmap\nK.B. MUHIL | 23BAD070") +
-  xlab("Month") +
-  ylab("") +
-  theme_minimal()
+ggplot(grade_data, aes(x = "", y = n, fill = Final_Grade)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y") +
+  ggtitle("Final Grade Distribution\nK.B. MUHIL | 23BAD070") +
+  theme_void()
